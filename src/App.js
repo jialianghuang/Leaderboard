@@ -13,15 +13,18 @@ constructor(){
 }
 addHandler = (e) =>{
   e.preventDefault()
-  if(this.state.name&&this.state.score)
+  if(this.state.name&&this.state.score){
+let newtable = this.state.table.filter((leader) => 
+    leader.name !== this.state.name
+   )
     this.setState(
       {
-        table: [...this.state.table,
+        table: [...newtable,
         {name: this.state.name,
         score: this.state.score}
         ]
       }
-    )    
+    )}    
 }
 nameHandler = (e) =>{
   e.preventDefault()
@@ -32,8 +35,16 @@ nameHandler = (e) =>{
 }
 scoreHandler = (e) =>{
   e.preventDefault()
+  if(!isNaN(e.target.value))
   this.setState({
     ...this.state,score:e.target.value
+  })
+}
+
+resetHandler = (e) =>{
+  e.preventDefault()
+  this.setState({
+    table:[]
   })
 }
 render(){
@@ -44,9 +55,10 @@ render(){
     <input onChange = {this.nameHandler} placeholder = "name" ></input>
     <input onChange = {this.scoreHandler} placeholder = "score" ></input>
     <button onClick = {this.addHandler.bind(this)}>submit</button>
+    <button onClick = {this.resetHandler.bind(this)}>reset</button>
    </form>
    <ol>
-   {this.state.table.sort((a,b) => a.score - b.score).map((leader,index) => {
+   {this.state.table.sort((a,b) => b.score - a.score).map((leader,index) => {
     return <Leader name={leader.name} score = {leader.score}></Leader>
      }
     )}
